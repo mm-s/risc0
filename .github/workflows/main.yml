@@ -33,7 +33,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [Linux, macOS]
+        os: [Linux, macOS, Windows]
 
     steps:
       - uses: actions/checkout@v2
