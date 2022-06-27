@@ -10,24 +10,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: [self-hosted, "${{ matrix.os }}"]
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [Windows]
-        include:
-          - os: Linux
-            config: --config=ci
-
-    steps:
-      - uses: actions/checkout@v2
-      - uses: risc0/actions-bazelisk@v1
-      - name: Build & test
-        env:
-          CONFIG: ${{ matrix.config }}
-        run: bazelisk test //... $CONFIG --config=cpu
-
   cargo:
     runs-on: [self-hosted, "${{ matrix.os }}"]
     strategy:
