@@ -1,13 +1,15 @@
-[workspace]
-
 [package]
 name = "risc0-zkvm-methods-inner"
 version = "0.1.0"
 edition = "2021"
 
+[build]
+rustflags=["-C", "passes=loweratomic"]
+
 [dependencies]
 risc0-zkvm = { version = "0.10", path = "../..", default-features = false, features = ["std"] }
 risc0-zkp = { version = "0.10", path = "../../../../../zkp/rust", default-features = false, features = ["std"] }
+getrandom = { version = "0.2", features = ["custom"] }
 
 [profile.release]
 lto = true

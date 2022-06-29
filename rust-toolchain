@@ -1,4 +1,3 @@
 [toolchain]
-channel = "nightly-2022-06-13"
-components = [ "rustfmt", "rust-src" ]
+channel = "dev-nils"
 profile = "minimal"

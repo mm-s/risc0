@@ -143,6 +143,7 @@ where
 {
     let manifest_path = manifest_dir.as_ref().join("Cargo.toml");
     let manifest_meta = MetadataCommand::new()
+        .other_options(["-Z".into(),"bindeps".into()])
         .manifest_path(&manifest_path)
         .no_deps()
         .exec()
@@ -195,15 +196,15 @@ where
     P: AsRef<Path>,
 {
     let target_dir = out_dir.as_ref().join("riscv-guest");
+    for (key, value) in env::vars() {
+        eprintln!("env {} -> {}", key, value);
+    }
     pkg.targets
         .iter()
         .filter(|target| target.kind.iter().any(|kind| kind == "bin"))
         .map(|target| Risc0Method {
             name: target.name.clone(),
-            elf_path: target_dir
-                .join("riscv32im-risc0-zkvm-elf")
-                .join("release")
-                .join(&target.name),
+            elf_path:  env::var(format!("CARGO_BIN_FILE_RISC0_ZKVM_METHODS_INNER_{}", &target.name)).unwrap().into()
         })
         .collect()
 }
@@ -358,12 +359,12 @@ pub fn embed_methods() {
     let methods_path = out_dir.join("methods.rs");
     let mut methods_file = File::create(&methods_path).unwrap();
 
-    let guest_build_env = setup_guest_build_env(&out_dir);
+//    let guest_build_env = setup_guest_build_env(&out_dir);
 
     for guest_pkg in guest_packages {
         println!("Building guest package {}.{}", pkg.name, guest_pkg.name);
 
-        build_guest_package(&guest_pkg, &out_dir.join("riscv-guest"), &guest_build_env);
+        // build_guest_package(&guest_pkg, &out_dir.join("riscv-guest"), &guest_build_env);
 
         for method in guest_methods(&guest_pkg, &out_dir) {
             methods_file
